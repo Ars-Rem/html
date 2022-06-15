@@ -17,9 +17,9 @@ jobs:
    
     steps:
 
-    - name: Check out code
-      uses: actions/checkout@v2
-    
+    #
+      #####
+      
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -32,10 +32,29 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build, tag, and push image to Amazon ECR
+      id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: name_repo
-        IMAGE_TAG: v1
+        ECR_REPOSITORY: my-ecr-repo
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: my-container
+        image: ${{ steps.build-image.outputs.image }}
+
+    - name: Run Task on Amazon ECS
+      uses: smitp/amazon-ecs-run-task@v1
+      with:
+        task-definition: task-definition.json
+        cluster: my-cluster
+        count: 1
+        started-by: github-actions-${{ github.actor }}
+        wait-for-finish: true
