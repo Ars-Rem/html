@@ -1,7 +1,7 @@
 {
 	"tags": [],
 	"ipcMode": null,
-	"executionRoleArn": "arn:aws:iam::918305761138:role/ecsTaskExecutionRole",
+	"executionRoleArn": "arn:aws:iam::111488783161:role/ecsTaskExecutionRole",
 	"containerDefinitions": [
 		{
 			"dnsSearchDomains": null,
@@ -45,14 +45,14 @@
 			"dockerLabels": null,
 			"systemControls": null,
 			"privileged": null,
-			"name": "zicoh-device-api",
-			"image": "918305761138.dkr.ecr.us-east-2.amazonaws.com/zicoh-device-api/zicoh-device-api",
+			"name": "name_repo",
+			"image": "111488783161.dkr.ecr.us-east-2.amazonaws.com/name_repo/v2",
 			"environmentFiles": [],
 			"repositoryCredentials": null
 		}
 	],
 	"memory": "2048",
-	"taskRoleArn": "arn:aws:iam::918305761138:role/ecsTaskExecutionRole",
+	"taskRoleArn": "arn:aws:iam::111488783161:role/ecsTaskExecutionRole",
 	"family": "",
 	"pidMode": null,
 	"requiresCompatibilities": ["FARGATE"],
